@@ -1,6 +1,6 @@
-import PageHome from '@/components/PageHome'
-import PageThreadShow from '@/components/PageThreadShow'
-import PageNotFound from '@/components/PageNotFound'
+import Home from '@/pages/Home'
+import ThreadShow from '@/pages/ThreadShow'
+import NotFound from '@/pages/NotFound'
 import { createRouter, createWebHistory } from 'vue-router'
 import sourceData from '@/data.json'
 
@@ -8,12 +8,12 @@ const routes = [
   {
     path: '/',
     name: 'Home',
-    component: PageHome
+    component: Home
   },
   {
     path: '/thread/:id',
     name: 'ThreadShow',
-    component: PageThreadShow,
+    component: ThreadShow,
     props: true,
     // check if route exists
     beforeEnter (to, from, next) {
@@ -24,7 +24,7 @@ const routes = [
       } else {
         // if doesn't exist, direct user to not found
         next({
-          name: 'PageNotFound',
+          name: 'NotFound',
           params: { pathMatch: to.path.substring(1).split('/') },
           // preserve the existing query and hash in url when route not matched
           query: to.query,
@@ -35,8 +35,8 @@ const routes = [
   },
   {
     path: '/:pathMatch(.*)*',
-    name: 'PageNotFound',
-    component: PageNotFound,
+    name: 'NotFound',
+    component: NotFound,
     props: true
   }
 ]

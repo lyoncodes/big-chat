@@ -1,4 +1,4 @@
-# note-taker
+# big-chat
 
 ## Project setup
 ```
