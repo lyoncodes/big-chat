@@ -10,22 +10,22 @@
                   <router-link :to="{name: 'ThreadShow', params: {id: thread.id}}">{{ thread.title }}</router-link>
               </p>
               <p class="text-faded text-xsmall">
-                  By <a href="#">{{ userById(thread.userId).name }}</a>, {{ thread.publishedAt }}.
+                  By <a href="#">{{ userById(thread.userId).name }}</a>, <AppDate :timestamp="thread.publishedAt" />.
               </p>
           </div>
 
           <div class="activity">
-              <p class="replies-count"> {{ thread.posts.length }} replies
-              </p>
+            <p class="replies-count"> {{ thread.posts.length }} replies
+            </p>
 
-              <img class="avatar-medium" :src="userById(thread.userId).avatar" alt="">
+            <img class="avatar-medium" :src="userById(thread.userId).avatar" alt="">
 
-              <div>
-                  <p class="text-xsmall">
-                      <a href="#">{{ userById(thread.userId).name }}.</a>
-                  </p>
-                  <p class="text-xsmall text-faded">{{ thread.publishedAt }}</p>
-              </div>
+            <div>
+                <p class="text-xsmall">
+                    <a href="#">{{ userById(thread.userId).name }}.</a>
+                </p>
+                <p class="text-xsmall text-faded"><AppDate :timestamp="thread.publishedAt" /></p>
+            </div>
           </div>
       </div>
 
