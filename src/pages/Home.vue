@@ -1,20 +1,20 @@
 <template lang="pug">
 h1 Welcome to Note Taker
-ThreadList(
-  :threads="threads"
+ForumList(
+  :forums="forums"
 )
 </template>
 <script>
-import ThreadList from '@/components/ThreadList'
+import ForumList from '@/components/ForumList'
 import sourceData from '@/data.json'
 export default {
   data () {
     return {
-      threads: sourceData.threads
+      forums: sourceData.forums
     }
   },
   components: {
-    ThreadList
+    ForumList
   },
   methods: {
     postById (postId) {
