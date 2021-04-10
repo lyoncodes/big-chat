@@ -6,17 +6,14 @@ CategoryList(
 </template>
 <script>
 import CategoryList from '@/components/CategoryList'
-import sourceData from '@/data.json'
 export default {
-  data () {
-    return {
-      categories: sourceData.categories
-    }
-  },
   components: {
     CategoryList
   },
-  methods: {
+  computed: {
+    categories () {
+      return this.$store.state.categories
+    }
   }
 }
 </script>
