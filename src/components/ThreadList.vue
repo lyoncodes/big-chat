@@ -33,7 +33,7 @@
 </div>
 </template>
 <script>
-import sourceData from '@/data.json'
+
 export default {
   name: 'ThreadShow',
   props: {
@@ -42,10 +42,12 @@ export default {
       required: true
     }
   },
-  data () {
-    return {
-      posts: sourceData.posts,
-      users: sourceData.users
+  computed: {
+    posts () {
+      return this.$store.state.posts
+    },
+    users () {
+      return this.$store.state.users
     }
   },
   methods: {
