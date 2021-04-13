@@ -11,6 +11,10 @@ export default createStore({
       post.id = 'mmmm' + Math.random()
       commit('setPost', { post })
       commit('appendPostToThread', { postId: post.id, threadId: post.threadId })
+    },
+    updateUser ({ commit }, user) {
+      console.log('called')
+      commit('setUser', { user, userId: user.id })
     }
   },
   getters: {
@@ -38,6 +42,11 @@ export default createStore({
   mutations: {
     setPost (state, { post }) {
       state.posts.push(post)
+    },
+    setUser (state, { user, userId }) {
+      const userIdx = state.users.findIndex(user => user.id === userId)
+      state.users[userIdx] = user
+      console.log(user)
     },
     appendPostToThread (state, { postId, threadId }) {
       // find the thread where the post belongs
