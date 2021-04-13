@@ -1,5 +1,5 @@
 <template lang="pug">
-h1 Welcome to Note Taker
+h1.push-top Welcome to Note Taker
 CategoryList(
   :categories="categories"
 )
