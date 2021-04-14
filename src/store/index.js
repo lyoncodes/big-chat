@@ -13,7 +13,6 @@ export default createStore({
       commit('appendPostToThread', { postId: post.id, threadId: post.threadId })
     },
     updateUser ({ commit }, user) {
-      console.log('called')
       commit('setUser', { user, userId: user.id })
     }
   },
@@ -46,7 +45,6 @@ export default createStore({
     setUser (state, { user, userId }) {
       const userIdx = state.users.findIndex(user => user.id === userId)
       state.users[userIdx] = user
-      console.log(user)
     },
     appendPostToThread (state, { postId, threadId }) {
       // find the thread where the post belongs
