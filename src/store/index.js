@@ -14,7 +14,7 @@ export default createStore({
       commit('setPost', { post })
       commit('appendPostToThread', { postId: post.id, threadId: post.threadId })
     },
-    createThread ({ commit, dispatch, state }, { text, title, forumId }) {
+    async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
       const id = 'mmmm' + Math.random()
       const userId = state.authId
       const publishedAt = Math.floor(Date.now() / 1000)
@@ -23,6 +23,9 @@ export default createStore({
       commit('appendThreadToForum', { forumId, threadId: id })
       commit('appendThreadToUser', { userId, threadId: id })
       dispatch('createPost', { text, threadId: id })
+      // now find the thread in the state and return it
+      // the save method in ThreadCreate is awaiting this return value
+      return state.threads.find(thread => thread.id === id)
     },
     updateUser ({ commit }, user) {
       commit('setUser', { user, userId: user.id })
