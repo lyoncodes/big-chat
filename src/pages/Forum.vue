@@ -3,8 +3,8 @@
 
       <div class="forum-header">
           <div class="forum-details">
-              <h1>{{forum.name}}</h1>
-              <p class="text-lead">{{forum.description}}</p>
+              <h1>{{ forum.name }}</h1>
+              <p class="text-lead">{{ forum.description }}</p>
           </div>
           <router-link
           :to="{ name:'ThreadCreate' , params: {forumId: forum.id}}"
@@ -17,9 +17,10 @@
     <ThreadList :threads="threads"/>
   </div>
 </template>
-<script>
 
+<script>
 import ThreadList from '@/components/ThreadList'
+
 export default {
   components: {
     ThreadList
