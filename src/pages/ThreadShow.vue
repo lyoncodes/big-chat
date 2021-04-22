@@ -18,6 +18,7 @@
 </template>
 <script>
 
+import { findById } from '@/helpers'
 import PostList from '@/components/PostList'
 import PostEditor from '../components/PostEditor.vue'
 export default {
@@ -40,7 +41,7 @@ export default {
       return this.$store.state.posts
     },
     thread () {
-      return this.threads.find(t => t.id === this.id) // instead of this.$route.params.id
+      return findById(this.threads, this.id) // instead of this.$route.params.id
     },
     threadPosts () {
       return this.posts.filter(post => post.threadId === this.id)
