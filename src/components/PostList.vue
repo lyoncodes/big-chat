@@ -33,7 +33,6 @@
 </div>
 </template>
 <script>
-import { findById } from '@/helpers'
 export default {
   props: {
     posts: {
