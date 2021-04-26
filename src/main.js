@@ -2,10 +2,13 @@ import { createApp } from 'vue'
 import App from './App.vue'
 import router from '@/router'
 import store from '@/store'
+import firebase from 'firebase'
+import firebaseConfig from '@/config/firebase'
 
-const noteApp = createApp(App)
-noteApp.use(router)
-noteApp.use(store)
+firebase.initializeApp(firebaseConfig)
+const bigChat = createApp(App)
+bigChat.use(router)
+bigChat.use(store)
 
 // Register all components globally
 const requireComponent = require.context('./components', true, /App[A-Z]\w+\.(vue|js)$/)
@@ -17,7 +20,7 @@ requireComponent.keys().forEach(function (fileName) {
       .replace(/^.+\//, '')
       .replace(/\.\w+$/, '')
   )
-  noteApp.component(baseComponentName, baseComponentConfig)
+  bigChat.component(baseComponentName, baseComponentConfig)
 })
 
-noteApp.mount('#app')
+bigChat.mount('#app')

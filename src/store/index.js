@@ -1,10 +1,13 @@
 import { createStore } from 'vuex'
-import sourceData from '@/data'
 import { findById, upsert } from '@/helpers'
 
 export default createStore({
   state: {
-    ...sourceData,
+    categories: [],
+    forums: [],
+    threads: [],
+    posts: [],
+    users: [],
     authId: 'rpbB8C6ifrYmNDufMERWfQUoa202'
   },
   actions: {
@@ -93,9 +96,8 @@ export default createStore({
     setThread (state, { thread }) {
       upsert(state.threads, thread)
     },
-    setUser (state, { user, userId }) {
-      const userIdx = state.users.findIndex(user => user.id === userId)
-      state.users[userIdx] = user
+    setUser (state, { user }) {
+      upsert(state.users, user)
     },
     appendPostToThread: makeAppendChildtoMutation({ parent: 'threads', child: 'posts' }),
     appendContributorToThread: makeAppendChildtoMutation({ parent: 'threads', child: 'contributors' }),
