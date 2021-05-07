@@ -91,11 +91,20 @@ export default createStore({
     fetchThread ({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'threads', id, emoji: '🧶' })
     },
+    fetchThreads ({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'threads', ids, emoji: '🧶' })
+    },
     fetchUser ({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'users', id, emoji: '🤦‍♂️' })
     },
+    fetchUsers ({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'users', ids, emoji: '🤦‍♂️' })
+    },
     fetchPost ({ dispatch }, { id }) {
       return dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' })
+    },
+    fetchPosts ({ dispatch }, { ids }) {
+      return dispatch('fetchItems', { resource: 'posts', ids, emoji: '💬' })
     },
     fetchItem ({ state, commit }, { id, emoji, resource }) {
       console.log('🥊 ' + emoji, id)
@@ -106,6 +115,9 @@ export default createStore({
           resolve(item)
         })
       })
+    },
+    fetchItems ({ dispatch }, { ids, resource, emoji }) {
+      return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource, emoji })))
     }
   },
   mutations: {
