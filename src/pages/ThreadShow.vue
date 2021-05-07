@@ -22,7 +22,6 @@
 <script>
 import PostList from '@/components/PostList'
 import PostEditor from '@/components/PostEditor.vue'
-import firebase from 'firebase'
 export default {
   name: 'ThreadShow',
   components: {
@@ -58,27 +57,15 @@ export default {
       this.$store.dispatch('createPost', post)
     }
   },
-  created () {
-    firebase.firestore().collection('threads').doc(this.id).onSnapshot((doc) => {
-      const thread = { ...doc.data(), id: doc.id }
-      this.$store.commit('setThread', { thread })
-
-      firebase.firestore().collection('users').doc(thread.userId).onSnapshot((doc) => {
-        const user = { ...doc.data(), id: doc.id }
-        this.$store.commit('setUser', { user })
-      })
-
-      thread.posts.forEach(postId => {
-        firebase.firestore().collection('posts').doc(postId).onSnapshot((doc) => {
-          const post = { ...doc.data(), id: doc.id }
-          this.$store.commit('setPost', { post })
-
-          firebase.firestore().collection('users').doc(post.userId).onSnapshot((doc) => {
-            const user = { ...doc.data(), id: doc.id }
-            this.$store.commit('setUser', { user })
-          })
-        })
-      })
+  async created () {
+    // fetch thread
+    const thread = await this.$store.dispatch('fetchThread', { id: this.id })
+    // fetch user
+    this.$store.dispatch('fetchUser', { id: thread.userId })
+    // fetch posts
+    thread.posts.forEach(async (postId) => {
+      const post = await this.$store.dispatch('fetchPost', { id: postId })
+      this.$store.dispatch('fetchUser', { id: post.userId })
     })
   }
 }
