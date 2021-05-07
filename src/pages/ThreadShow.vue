@@ -42,7 +42,7 @@ export default {
       return this.$store.state.posts
     },
     thread () {
-      return this.$store.getters.threads(this.id) // instead of this.$route.params.id
+      return this.$store.getters.thread(this.id) // instead of this.$route.params.id
     },
     threadPosts () {
       return this.posts.filter(post => post.threadId === this.id)
