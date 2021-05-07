@@ -11,60 +11,6 @@ export default createStore({
     users: [],
     authId: 'rpbB8C6ifrYmNDufMERWfQUoa202'
   },
-  actions: {
-    createPost ({ commit, state }, post) {
-      post.id = 'mmmm' + Math.random()
-      post.userId = state.authId
-      post.publishedAt = Math.floor(Date.now() / 1000)
-      commit('setItem', { resource: 'posts', item: post })
-      commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
-      commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
-    },
-    async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
-      const id = 'mmmm' + Math.random()
-      const userId = state.authId
-      const publishedAt = Math.floor(Date.now() / 1000)
-      const thread = { publishedAt, userId, id, forumId, text, title }
-      commit('setThread', { resource: 'threads', item: thread })
-      commit('appendThreadToForum', { parentId: forumId, childId: id })
-      commit('appendThreadToUser', { parentId: userId, childId: id })
-      dispatch('createPost', { text, threadId: id })
-      // now find the thread in the state and return it
-      // the save method in ThreadCreate is awaiting this return value
-      return findById(state.threads, id)
-    },
-    async updateThread ({ commit, dispatch, state }, { id, title, text }) {
-      const thread = findById(state.threads, id)
-      const post = findById(state.posts, thread.posts[0])
-      const newThread = { ...thread, title }
-      const newPost = { ...post, text }
-      commit('setThread', { resource: '', item: newThread })
-      commit('setPost', { resource: 'posts', item: newPost })
-      return newThread
-    },
-    updateUser ({ commit }, user) {
-      commit('setItem', { resource: 'users', item: user })
-    },
-    fetchThread ({ dispatch }, { id }) {
-      return dispatch('fetchItem', { resource: 'threads', id, emoji: '🧶' })
-    },
-    fetchUser ({ dispatch }, { id }) {
-      return dispatch('fetchItem', { resource: 'users', id, emoji: '🤦‍♂️' })
-    },
-    fetchPost ({ dispatch }, { id }) {
-      return dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' })
-    },
-    fetchItem ({ state, users, commit }, { id, emoji, resource }) {
-      console.log('🥊 ' + emoji)
-      return new Promise((resolve) => {
-        firebase.firestore().collection(resource).doc(id).onSnapshot((doc) => {
-          const item = { ...doc.data(), id: doc.id }
-          commit('setItem', { item })
-          resolve(item)
-        })
-      })
-    }
-  },
   getters: {
     authUser: (state, getters) => {
       return getters.user(state.authId)
@@ -78,11 +24,11 @@ export default createStore({
           get posts () {
             return state.posts.filter(post => post.userId === user.id)
           },
-          get threads () {
-            return state.threads.filter(thread => thread.userId === user.id)
-          },
           get postsCount () {
             return this.posts.length
+          },
+          get threads () {
+            return state.threads.filter(post => post.userId === user.id)
           },
           get threadsCount () {
             return this.threads.length
@@ -90,7 +36,7 @@ export default createStore({
         }
       }
     },
-    threads: state => {
+    thread: state => {
       return (id) => {
         const thread = findById(state.threads, id)
         return {
@@ -106,6 +52,60 @@ export default createStore({
           }
         }
       }
+    }
+  },
+  actions: {
+    createPost ({ commit, state }, post) {
+      post.id = 'mmmm' + Math.random()
+      post.userId = state.authId
+      post.publishedAt = Math.floor(Date.now() / 1000)
+      commit('setItem', { resource: 'posts', item: post })
+      commit('appendPostToThread', { childId: post.id, parentId: post.threadId })
+      commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
+    },
+    async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
+      const id = 'mmmm' + Math.random()
+      const userId = state.authId
+      const publishedAt = Math.floor(Date.now() / 1000)
+      const thread = { publishedAt, userId, id, forumId, title }
+      commit('setItem', { resource: 'threads', item: thread })
+      commit('appendThreadToForum', { parentId: forumId, childId: id })
+      commit('appendThreadToUser', { parentId: userId, childId: id })
+      dispatch('createPost', { text, threadId: id })
+      // now find the thread in the state and return it
+      // the save method in ThreadCreate is awaiting this return value
+      return findById(state.threads, id)
+    },
+    async updateThread ({ commit, state }, { id, title, text }) {
+      const thread = findById(state.threads, id)
+      const post = findById(state.posts, thread.posts[0])
+      const newThread = { ...thread, title }
+      const newPost = { ...post, text }
+      commit('setItem', { resource: 'threads', item: newThread })
+      commit('setItem', { resource: 'posts', item: newPost })
+      return newThread
+    },
+    updateUser ({ commit }, user) {
+      commit('setItem', { resource: 'users', item: user })
+    },
+    fetchThread ({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'threads', id, emoji: '🧶' })
+    },
+    fetchUser ({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'users', id, emoji: '🤦‍♂️' })
+    },
+    fetchPost ({ dispatch }, { id }) {
+      return dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' })
+    },
+    fetchItem ({ state, commit }, { id, emoji, resource }) {
+      console.log('🥊 ' + emoji, id)
+      return new Promise((resolve) => {
+        firebase.firestore().collection(resource).doc(id).onSnapshot((doc) => {
+          const item = { ...doc.data(), id: doc.id }
+          commit('setItem', { resource, item })
+          resolve(item)
+        })
+      })
     }
   },
   mutations: {
