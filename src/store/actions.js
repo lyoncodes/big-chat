@@ -39,6 +39,7 @@ export default {
   fetchThread: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'threads', id, emoji: '🧶' }),
   fetchPost: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' }),
   fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'users', id, emoji: '🤦‍♂️' }),
+  fetchAuthUser: ({ dispatch, state }, { id }) => dispatch('fetchItem', { resource: 'users', id: state.authId, emoji: '🤦‍♂️' }),
   fetchAllCategories ({ commit }) {
     return new Promise((resolve) => {
       firebase.firestore().collection('categories').onSnapshot((querySnapshot) => {
@@ -51,21 +52,11 @@ export default {
       })
     })
   },
-  fetchCategories ({ dispatch }, { ids }) {
-    return dispatch('fetchItems', { resource: 'categories', ids, emoji: '🏷' })
-  },
-  fetchForums ({ dispatch }, { ids }) {
-    return dispatch('fetchItems', { resource: 'forums', ids, emoji: '📃' })
-  },
-  fetchThreads ({ dispatch }, { ids }) {
-    return dispatch('fetchItems', { resource: 'threads', ids, emoji: '🧶' })
-  },
-  fetchPosts ({ dispatch }, { ids }) {
-    return dispatch('fetchItems', { resource: 'posts', ids, emoji: '💬' })
-  },
-  fetchUsers ({ dispatch }, { ids }) {
-    return dispatch('fetchItems', { resource: 'users', ids, emoji: '🤦‍♂️' })
-  },
+  fetchCategories: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'categories', ids, emoji: '🏷' }),
+  fetchForums: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'forums', ids, emoji: '📃' }),
+  fetchThreads: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'threads', ids, emoji: '🧶' }),
+  fetchPosts: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'posts', ids, emoji: '💬' }),
+  fetchUsers: ({ dispatch }, { ids }) => dispatch('fetchItems', { resource: 'users', ids, emoji: '🤦‍♂️' }),
   fetchItem ({ state, commit }, { id, emoji, resource }) {
     console.log('🥊 ' + emoji, id)
     return new Promise((resolve) => {
