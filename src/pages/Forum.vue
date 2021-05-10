@@ -19,8 +19,9 @@
 </template>
 
 <script>
-import { findById } from '@/helpers'
 import ThreadList from '@/components/ThreadList'
+import { findById } from '@/helpers'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
@@ -41,10 +42,13 @@ export default {
       return this.forum.threads.map(threadId => this.$store.getters.thread(threadId))
     }
   },
+  methods: {
+    ...mapActions(['fetchForum', 'fetchThreads', 'fetchUsers'])
+  },
   async created () {
-    const forum = await this.$store.dispatch('fetchForum', { id: this.id })
-    const threads = await this.$store.dispatch('fetchThreads', { ids: forum.threads })
-    this.$store.dispatch('fetchUsers', { ids: threads.map(thread => thread.userId) })
+    const forum = await this.fetchForum({ id: this.id })
+    const threads = await this.fetchThreads({ ids: forum.threads })
+    this.fetchUsers({ ids: threads.map(thread => thread.userId) })
   }
 }
 </script>
