@@ -7,8 +7,6 @@ import Forum from '@/pages/Forum'
 import Category from '@/pages/Category'
 import Profile from '@/pages/Profile'
 import { createRouter, createWebHistory } from 'vue-router'
-import sourceData from '@/data.json'
-import { findById } from '@/helpers'
 
 const routes = [
   {

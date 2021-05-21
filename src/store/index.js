@@ -1,6 +1,4 @@
 import { createStore } from 'vuex'
-import { findById, upsert } from '@/helpers'
-import firebase from 'firebase'
 import getters from '@/store/getters'
 import actions from '@/store/actions'
 import mutations from '@/store/mutations'
