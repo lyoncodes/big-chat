@@ -3,7 +3,7 @@ import { findById } from '@/helpers'
 export default {
   async createPost ({ commit, state }, post) {
     post.userId = state.authId
-    post.publishedAt = Math.floor(Date.now() / 1000)
+    post.publishedAt = firebase.firestore.FieldValue.serverTimestamp()
     // create database record and update other records
     // batch write
     const batch = firebase.firestore().batch()
@@ -18,11 +18,13 @@ export default {
     })
     await batch.commit()
 
+    const newPost = postRef.get()
     // create instance in vuex store, passing newly created id from firestore as id
-    commit('setItem', { resource: 'posts', item: { ...post, id: postRef.id } })
-    commit('appendPostToThread', { childId: postRef.id, parentId: post.threadId })
-    commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
+    commit('setItem', { resource: 'posts', item: { ...newPost, id: postRef.id } })
+    commit('appendPostToThread', { childId: postRef.id, parentId: newPost.threadId })
+    commit('appendContributorToThread', { childId: state.authId, parentId: newPost.threadId })
   },
+
   async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
     const id = 'mmmm' + Math.random()
     const userId = state.authId
