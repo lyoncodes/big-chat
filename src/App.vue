@@ -5,10 +5,16 @@
 
 <script>
 import TheNavbar from './components/TheNavbar.vue'
-
+import { mapActions } from 'vuex'
 export default {
+  name: 'App',
   components: { TheNavbar },
-  name: 'App'
+  methods: {
+    ...mapActions(['fetchAuthUser'])
+  },
+  created () {
+    this.fetchAuthUser({ id: this.$store.state.authId })
+  }
 }
 </script>
 
