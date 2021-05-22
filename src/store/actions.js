@@ -21,22 +21,39 @@ export default {
     const newPost = postRef.get()
     // create instance in vuex store, passing newly created id from firestore as id
     commit('setItem', { resource: 'posts', item: { ...newPost, id: postRef.id } })
-    commit('appendPostToThread', { childId: postRef.id, parentId: newPost.threadId })
-    commit('appendContributorToThread', { childId: state.authId, parentId: newPost.threadId })
+    commit('appendPostToThread', { childId: postRef.id, parentId: post.threadId })
+    commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
   },
 
   async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
-    const id = 'mmmm' + Math.random()
     const userId = state.authId
-    const publishedAt = Math.floor(Date.now() / 1000)
-    const thread = { publishedAt, userId, id, forumId, title }
-    commit('setItem', { resource: 'threads', item: thread })
-    commit('appendThreadToForum', { parentId: forumId, childId: id })
-    commit('appendThreadToUser', { parentId: userId, childId: id })
-    dispatch('createPost', { text, threadId: id })
+    const publishedAt = firebase.firestore.FieldValue.serverTimestamp()
+
+    const threadRef = firebase.firestore().collection('threads').doc()
+    const thread = { publishedAt, userId, id: threadRef.id, forumId, title }
+    const userRef = firebase.firestore().collection('users').doc(userId)
+    const forumRef = firebase.firestore().collection('forums').doc(forumId)
+
+    const batch = firebase.firestore().batch()
+
+    batch.set(threadRef, thread)
+    batch.update(userRef, {
+      threads: firebase.firestore.FieldValue.arrayUnion(threadRef.id)
+    })
+    batch.update(forumRef, {
+      threads: firebase.firestore.FieldValue.arrayUnion(threadRef.id)
+    })
+    await batch.commit()
+
+    const newThread = await threadRef.get()
+
+    commit('setItem', { resource: 'threads', item: { ...newThread.data(), id: newThread.id } })
+    commit('appendThreadToUser', { parentId: userId, childId: threadRef.idid })
+    commit('appendThreadToForum', { parentId: forumId, childId: threadRef.id })
+    await dispatch('createPost', { text, threadId: threadRef.id })
     // now find the thread in the state and return it
     // the save method in ThreadCreate is awaiting this return value
-    return findById(state.threads, id)
+    return findById(state.threads, threadRef.id)
   },
   async updateThread ({ commit, state }, { id, title, text }) {
     const thread = findById(state.threads, id)

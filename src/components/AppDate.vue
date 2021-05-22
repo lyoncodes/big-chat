@@ -24,10 +24,10 @@ export default {
       return this.timestamp?.seconds || this.timestamp
     },
     diffForHumans () {
-      return dayjs.unix(this.timestamp).fromNow()
+      return dayjs.unix(this.normalizedTimeStamp).fromNow()
     },
     fullDate () {
-      return dayjs.unix(this.timestamp).format('llll')
+      return dayjs.unix(this.normalizedTimeStamp).format('llll')
     }
   }
 }
