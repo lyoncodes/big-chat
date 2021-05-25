@@ -18,11 +18,20 @@
     </div>
 
     <div class="post-content">
-      <div>
-        <p>
+      <div class="col-full">
+        <post-editor v-if="editing === post.id" :post="post"/>
+        <p v-else>
           {{post.text}}
         </p>
       </div>
+      <a
+      @click.prevent="toggleEditMode(post.id)"
+      href="#"
+      style="margin-left: auto; padding-left: 10px"
+      class="link-unstyled"
+      title="Make a change">
+        <fa icon="pencil-alt" />
+      </a>
     </div>
 
     <div class="post-date text-faded">
@@ -33,11 +42,18 @@
 </div>
 </template>
 <script>
+import PostEditor from '@/components/PostEditor.vue'
 export default {
+  components: { PostEditor },
   props: {
     posts: {
       required: true,
       type: Array
+    }
+  },
+  data () {
+    return {
+      editing: null
     }
   },
   computed: {
@@ -48,6 +64,9 @@ export default {
   methods: {
     userById (userId) {
       return this.$store.getters.user(userId)
+    },
+    toggleEditMode (id) {
+      this.editing = id === this.editing ? null : id
     }
   }
 }

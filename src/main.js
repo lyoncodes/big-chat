@@ -4,11 +4,13 @@ import router from '@/router'
 import store from '@/store'
 import firebase from 'firebase'
 import firebaseConfig from '@/config/firebase'
+import FontAwesome from '@/plugins/FontAwesome'
 
 firebase.initializeApp(firebaseConfig)
 const bigChat = createApp(App)
 bigChat.use(router)
 bigChat.use(store)
+bigChat.use(FontAwesome)
 
 // Register all components globally
 const requireComponent = require.context('./components', true, /App[A-Z]\w+\.(vue|js)$/)
