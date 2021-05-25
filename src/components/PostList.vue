@@ -19,7 +19,11 @@
 
     <div class="post-content">
       <div class="col-full">
-        <post-editor v-if="editing === post.id" :post="post"/>
+        <post-editor
+        v-if="editing === post.id"
+        :post="post"
+        @save="updatePost($event.post)"
+        />
         <p v-else>
           {{post.text}}
         </p>
@@ -43,6 +47,7 @@
 </template>
 <script>
 import PostEditor from '@/components/PostEditor.vue'
+import { mapActions } from 'vuex'
 export default {
   components: { PostEditor },
   props: {
@@ -62,6 +67,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['updatePost']),
     userById (userId) {
       return this.$store.getters.user(userId)
     },
