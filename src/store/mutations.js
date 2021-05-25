@@ -1,7 +1,7 @@
-import { upsert, findById } from '@/helpers'
+import { upsert, findById, docToResource } from '@/helpers'
 export default {
   setItem (state, { resource, item }) {
-    upsert(state[resource], item)
+    upsert(state[resource], docToResource(item))
   },
   appendPostToThread: makeAppendChildtoMutation({ parent: 'threads', child: 'posts' }),
   appendContributorToThread: makeAppendChildtoMutation({ parent: 'threads', child: 'contributors' }),
