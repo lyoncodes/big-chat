@@ -29,6 +29,21 @@ export default {
     commit('appendContributorToThread', { childId: state.authId, parentId: post.threadId })
   },
 
+  async updatePost ({ commit, state }, { text, id }) {
+    const post = {
+      text,
+      edited: {
+        at: firebase.firestore.FieldValue.serverTimestamp(),
+        by: state.authId,
+        moderated: false
+      }
+    }
+    const postRef = firebase.firestore().collection('posts').doc(id)
+    await postRef.update(post)
+    const updatedPost = await postRef.get()
+    commit('setItem', { resource: 'posts', item: updatedPost })
+  },
+
   async createThread ({ commit, dispatch, state }, { text, title, forumId }) {
     const userId = state.authId
     const publishedAt = firebase.firestore.FieldValue.serverTimestamp()
@@ -113,14 +128,19 @@ export default {
   fetchItem ({ state, commit }, { id, emoji, resource }) {
     console.log('🥊 ' + emoji, id)
     return new Promise((resolve) => {
-      firebase.firestore().collection(resource).doc(id).onSnapshot((doc) => {
+      const unsubscribe = firebase.firestore().collection(resource).doc(id).onSnapshot((doc) => {
         const item = { ...doc.data(), id: doc.id }
         commit('setItem', { resource, item })
         resolve(item)
       })
+      commit('appendUnsubscribe', { unsubscribe })
     })
   },
   fetchItems ({ dispatch }, { ids, resource, emoji }) {
     return Promise.all(ids.map(id => dispatch('fetchItem', { id, resource, emoji })))
+  },
+  async unsubscribeAllSnapshot ({ state, commit }) {
+    state.unsubscribes.forEach(unsubscribe => unsubscribe())
+    commit('clearAllUnsubscribes')
   }
 }
