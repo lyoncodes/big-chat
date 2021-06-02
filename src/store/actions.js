@@ -106,7 +106,7 @@ export default {
   fetchThread: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'threads', id, emoji: '🧶' }),
   fetchPost: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'posts', id, emoji: '💬' }),
   fetchUser: ({ dispatch }, { id }) => dispatch('fetchItem', { resource: 'users', id, emoji: '🤦‍♂️' }),
-  fetchAuthUser: ({ dispatch, state }, { id }) => dispatch('fetchItem', { resource: 'users', id: state.authId, emoji: '🤦‍♂️' }),
+  fetchAuthUser: ({ dispatch, state }) => dispatch('fetchItem', { resource: 'users', id: state.authId, emoji: '🤦‍♂️' }),
   fetchAllCategories ({ commit }) {
     return new Promise((resolve) => {
       firebase.firestore().collection('categories').onSnapshot((querySnapshot) => {
@@ -131,7 +131,7 @@ export default {
       const unsubscribe = firebase.firestore().collection(resource).doc(id).onSnapshot((doc) => {
         const item = { ...doc.data(), id: doc.id }
         commit('setItem', { resource, item })
-        resolve(item)
+        setTimeout(() => resolve(item), 100)
       })
       commit('appendUnsubscribe', { unsubscribe })
     })

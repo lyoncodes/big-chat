@@ -1,23 +1,23 @@
 <template>
-<div v-if="asyncDataStatus_ready" class="col-large push-top">
-  <h1>
-    {{ thread.title }}
-    <router-link
-      :to="{ name: 'ThreadEdit', id: this.id }"
-      class="btn-green btn-small"
-      tag="button"
-    >
-    Edit thread
-    </router-link>
-  </h1>
-  <p>
-    By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a>, <AppDate :timestamp="thread.publishedAt"/>.
-    <span style="float:right; margin-top: 2px;" class="hide-mobile text-faded text-small">{{ thread.repliesCount }} replies by {{ thread.contributorsCount }} contributors</span>
-  </p>
-  <post-list :posts="threadPosts"/>
+  <div v-if="asyncDataStatus_ready" class="col-large push-top">
+    <h1>
+      {{ thread.title }}
+      <router-link
+        :to="{ name: 'ThreadEdit', id: this.id }"
+        class="btn-green btn-small"
+        tag="button"
+      >
+      Edit thread
+      </router-link>
+    </h1>
+    <p>
+      By <a href="#" class="link-unstyled">{{ thread.author?.name }}</a>, <AppDate :timestamp="thread.publishedAt"/>.
+      <span style="float:right; margin-top: 2px;" class="hide-mobile text-faded text-small">{{ thread.repliesCount }} replies by {{ thread.contributorsCount }} contributors</span>
+    </p>
+    <post-list :posts="threadPosts"/>
 
-  <post-editor @save="addPost"/>
-</div>
+    <post-editor @save="addPost"/>
+  </div>
 </template>
 <script>
 import PostList from '@/components/PostList'
@@ -26,7 +26,6 @@ import { mapActions } from 'vuex'
 import asyncDataStatus from '@/mixins/asyncDataStatus'
 
 export default {
-  mixins: [asyncDataStatus],
   name: 'ThreadShow',
   components: {
     PostList,
@@ -38,6 +37,7 @@ export default {
       type: String
     }
   },
+  mixins: [asyncDataStatus],
   computed: {
     threads () {
       return this.$store.state.threads
