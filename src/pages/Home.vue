@@ -1,13 +1,16 @@
 <template lang="pug">
-h1.push-top Welcome to Big Chat
-CategoryList(
-  :categories="categories"
-)
+div.container(v-if="asyncDataStatus_ready")
+  h1.push-top Welcome to Big Chat
+  CategoryList(
+    :categories="categories"
+  )
 </template>
 <script>
 import CategoryList from '@/components/CategoryList'
 import { mapActions } from 'vuex'
+import asyncDataStatus from '@/mixins/asyncDataStatus'
 export default {
+  mixins: [asyncDataStatus],
   components: {
     CategoryList
   },
@@ -22,7 +25,8 @@ export default {
   async created () {
     const categories = await this.fetchAllCategories()
     const forumIds = categories.map(category => category.forums).flat()
-    this.fetchForums({ ids: forumIds })
+    await this.fetchForums({ ids: forumIds })
+    this.asyncDataStatus_fetched()
   }
 }
 </script>
