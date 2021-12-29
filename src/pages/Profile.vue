@@ -25,9 +25,11 @@
 </template>
 <script>
 import { mapGetters } from 'vuex'
+import store from '@/store'
 import PostList from '@/components/PostList'
 import UserProfileCard from '@/components/UserProfileCard.vue'
 import UserProfileEditor from '@/components/UserProfileEditor.vue'
+import asyncDataStatus from '@/mixins/asyncDataStatus'
 export default {
   props: {
     edit: {
@@ -35,9 +37,16 @@ export default {
       default: false
     }
   },
+  mixins: [asyncDataStatus],
   components: { PostList, UserProfileCard, UserProfileEditor },
   computed: {
     ...mapGetters({ user: 'authUser' })
+  },
+  beforeRouteEnter (to, from) {
+    if (!store.state.authId) return { name: 'Home' }
+  },
+  async created () {
+    this.asyncDataStatus_fetched()
   }
 }
 </script>

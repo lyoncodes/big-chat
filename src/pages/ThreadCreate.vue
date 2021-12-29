@@ -5,7 +5,7 @@
 
           <h1>Create new thread in <i>{{ forum.name }}</i></h1>
 
-          <ThreadEditor @save="save" @cancel="cancel"/>
+          <ThreadEditor @save="save" @cancel="cancel" @dirty="formIsDirty = true" @clean="formIsDirty = false"/>
 
       </div>
 
@@ -28,6 +28,11 @@ export default {
       required: true
     }
   },
+  data () {
+    return {
+      formIsDirty: false
+    }
+  },
   computed: {
     forum () {
       return findById(this.$store.state.forums, this.forumId)
@@ -41,7 +46,6 @@ export default {
         title,
         text
       })
-
       this.$router.push({ name: 'ThreadShow', params: { id: thread.id } })
     },
     cancel () {
@@ -51,6 +55,12 @@ export default {
   async created () {
     await this.fetchForum({ id: this.forumId })
     this.asyncDataStatus_fetched()
+  },
+  beforeRouteLeave () {
+    if (this.formIsDirty) {
+      const confirmed = window.confirm('You have unsaved changes! Do you want to leave?')
+      if (!confirmed) return false
+    }
   }
 }
 </script>
