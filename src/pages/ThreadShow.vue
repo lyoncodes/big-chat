@@ -62,6 +62,7 @@ export default {
       this.createPost(post)
     }
   },
+  // async/await created hook
   async created () {
     // fetch thread
     const thread = await this.fetchThread({ id: this.id })

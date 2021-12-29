@@ -35,7 +35,7 @@
 <script>
 import { findById } from '@/helpers'
 export default {
-  name: 'ThreadShow',
+  name: 'ThreadList',
   props: {
     threads: {
       type: Array,

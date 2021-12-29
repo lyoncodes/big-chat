@@ -26,8 +26,8 @@
 <script>
 import { mapGetters } from 'vuex'
 import PostList from '@/components/PostList'
-import UserProfileCard from '../components/UserProfileCard.vue'
-import UserProfileEditor from '../components/UserProfileEditor.vue'
+import UserProfileCard from '@/components/UserProfileCard.vue'
+import UserProfileEditor from '@/components/UserProfileEditor.vue'
 export default {
   props: {
     edit: {
