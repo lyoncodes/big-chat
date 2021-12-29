@@ -2,7 +2,7 @@
   <TheNavbar />
   <div class="container">
     <router-view v-show="showPage" @ready="onPageReady"/>
-    <AppSpinner v-show="!showPage"></AppSpinner>
+    <AppSpinner v-show="!showPage" />
   </div>
 </template>
 

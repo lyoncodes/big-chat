@@ -7,6 +7,15 @@ import firebaseConfig from '@/config/firebase'
 import FontAwesome from '@/plugins/FontAwesome'
 
 firebase.initializeApp(firebaseConfig)
+
+// on authStateChange
+firebase.auth().onAuthStateChanged(user => {
+  store.dispatch('unsubscribeAuthUserSnapshot')
+  if (user) {
+    store.dispatch('fetchAuthUser')
+  }
+})
+
 const bigChat = createApp(App)
 bigChat.use(router)
 bigChat.use(store)

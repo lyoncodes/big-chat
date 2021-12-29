@@ -30,7 +30,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchCategory', 'fetchFoums']),
+    ...mapActions(['fetchCategory', 'fetchForums']),
     getForumsForCategory (category) {
       return this.$store.state.forums.filter(forum => forum.categoryId === category.id)
     }
